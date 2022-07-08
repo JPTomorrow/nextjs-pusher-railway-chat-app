@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .default-button {
+    @apply border-[1px] border-gray-800 rounded-md py-1 px-2 hover:bg-gray-800 hover:border-white hover:text-white transition-all duration-75;
+  }
+
+  .chat-sidebar {
+    @apply w-[200px] left-0 top-0 h-full bg-gray-700;
+  }
+
+  .chat-sidebar-user {
+    @apply pl-3 py-[3px] hover:bg-gray-900 transition-all shadow-md border-[1px] border-opacity-25 border-gray-500;
+  }
+
+  .chat-message-input {
+    @apply absolute bottom-0 left-0 w-screen bg-gray-500 py-[7px];
+  }
+
+  .other-chat-message {
+    @apply bg-blue-300 h-auto w-auto max-w-[45vw] px-5 py-3 mx-5 mt-5 rounded-2xl self-start break-words;
+  }
+
+  .your-chat-message {
+    @apply bg-teal-700 h-auto w-auto max-w-[45vw] px-5 py-3 mx-5 mt-5 rounded-2xl self-end text-right break-words;
+  }
+}
