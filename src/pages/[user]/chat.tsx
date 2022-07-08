@@ -16,6 +16,8 @@ const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
 
+  const [users, setUsers] = useState<string[]>([]);
+
   useEffect(() => {
     var pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_API_KEY as string, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER as string,
@@ -30,12 +32,37 @@ const Chat = () => {
       ]);
     });
 
-    pusher.connection.bind("connected", () => {});
+    channel.bind("user-remove-update-event", (data: any) => {
+      setUsers((prevState) => [...prevState.filter((u) => u !== data.user)]);
+    });
 
     return () => {
+      fetch("/api/pusher/removeuser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user: username }),
+      }).catch((err) =>
+        console.log("Message failed sending with the following error: \n", err)
+      );
       pusher.unsubscribe("chat");
     };
   }, []);
+
+  useEffect(() => {
+    // set users to match any new users that have sent a message
+    // THIS IS A WORKARAOUND FOR NOT HAVING DATABASE STORAGE FOR USERS
+    // THE EFFECT WILL BE THAT CLIENTS ARE INFORMED OF NEW USERS WHEN
+    // A NEW USER SENDS A MESSAGE
+    function onlyUnique(value: string, index: number, self: string[]) {
+      return self.indexOf(value) === index;
+    }
+    const newMessages = messages
+      .map((x) => x.user as string)
+      .filter(onlyUnique);
+    setUsers(newMessages);
+  }, [messages]);
 
   const inputMessageChanged = (event: any) => {
     setInputMessage(event.target.value);
@@ -50,7 +77,7 @@ const Chat = () => {
     };
 
     // push message to api/[pusher]
-    await fetch("/api/pusher", {
+    await fetch("/api/pusher/message", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -81,11 +108,19 @@ const Chat = () => {
             </div>
           </div>
           <h1 className="pl-3 pt-2 mb-2 border-t-[1px]">Users:</h1>
-          {/* <!-- {#if !$q.loading}
+          {
+            users.map((user, i) => (
+              <div key={i} className="chat-sidebar-user">
+                {user}
+              </div>
+            ))
+
+            /* <!-- {#if !$q.loading}
 			{#each users as user}
 				<div className="chat-sidebar-user">{user}</div>
 			{/each}
-		{/if} --> */}
+		{/if} --> */
+          }
         </div>
         <div className="chat-message-input flex justify-start">
           <input
