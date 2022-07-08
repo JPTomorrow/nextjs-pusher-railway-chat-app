@@ -5,6 +5,7 @@ interface Message {
   id: number;
   user?: string;
   content?: string;
+  timestamp?: string;
 }
 
 export default async function handler(
@@ -17,6 +18,7 @@ export default async function handler(
       id: id,
       user: user,
       content: content,
+      timestamp: new Date().toLocaleTimeString(),
     } as Message);
 
     res.status(200).send("Message Sent");

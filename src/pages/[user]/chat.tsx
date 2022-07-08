@@ -8,6 +8,7 @@ interface Message {
   id: number;
   user?: string;
   content?: string;
+  timestamp?: string;
 }
 
 const Chat = () => {
@@ -58,7 +59,12 @@ const Chat = () => {
     channel.bind("message-update-event", (data: any) => {
       setMessages((prevState) => [
         ...prevState,
-        { id: data.id, user: data.user, content: data.content },
+        {
+          id: data.id,
+          user: data.user,
+          content: data.content,
+          timestamp: data.timestamp,
+        },
       ]);
     });
 
@@ -149,13 +155,19 @@ const Chat = () => {
             if (msg.user === username) {
               return (
                 <div key={i} className="your-chat-message">
-                  {msg.content}
+                  <p className="text-neutral-400 text-left text-sm">
+                    {msg.user} - {msg.timestamp}
+                  </p>
+                  <p className="text-md p-0 m-0">{msg.content}</p>
                 </div>
               );
             } else {
               return (
                 <div key={i} className="other-chat-message">
-                  {msg.content}
+                  <p className="text-neutral-400 text-left text-sm">
+                    {msg.user} - {msg.timestamp}
+                  </p>
+                  <p className="text-md p-0 m-0">{msg.content}</p>
                 </div>
               );
             }

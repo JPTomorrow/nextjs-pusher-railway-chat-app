@@ -20,10 +20,10 @@
   }
 
   .other-chat-message {
-    @apply bg-blue-300 h-auto w-auto max-w-[45vw] px-5 py-3 mx-5 mt-5 rounded-2xl self-start break-words;
+    @apply bg-blue-300 h-auto w-auto max-w-[45vw] px-5 py-3 mx-5 mt-5 rounded-2xl self-start break-words bg-opacity-60;
   }
 
   .your-chat-message {
-    @apply bg-teal-700 h-auto w-auto max-w-[45vw] px-5 py-3 mx-5 mt-5 rounded-2xl self-end text-right break-words;
+    @apply bg-teal-700 h-auto w-auto max-w-[45vw] px-5 py-3 mx-5 mt-5 rounded-2xl self-end text-left break-words bg-opacity-60;
   }
 }
