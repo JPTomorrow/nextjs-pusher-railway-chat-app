@@ -4,11 +4,11 @@
 
 @layer components {
   .default-button {
-    @apply border-[1px] border-gray-800 rounded-md py-1 px-2 hover:bg-gray-800 hover:border-white hover:text-white transition-all duration-75;
+    @apply border-[1px] border-gray-800 rounded-md py-1 px-2 hover:bg-gray-800 hover:border-white hover:text-white transition-all duration-75 outline-none;
   }
 
   .chat-sidebar {
-    @apply w-[200px] left-0 top-0 h-full bg-gray-700;
+    @apply w-[15vw] min-w-[155px] left-0 flex flex-col top-0 h-full bg-neutral-700;
   }
 
   .chat-sidebar-user {
@@ -16,7 +16,7 @@
   }
 
   .chat-message-input {
-    @apply absolute bottom-0 left-0 w-screen bg-gray-500 py-[7px];
+    @apply absolute bottom-0 left-0 w-screen bg-neutral-800 py-[7px] focus:ring-0 focus:outline-none border-t-[1px] border-t-teal-900;
   }
 
   .other-chat-message {
