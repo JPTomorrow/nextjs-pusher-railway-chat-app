@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Pusher from "pusher-js";
+import { AiOutlineDoubleRight } from "react-icons/ai";
 
 interface Message {
   id: number;
@@ -17,6 +18,35 @@ const Chat = () => {
   const [inputMessage, setInputMessage] = useState("");
 
   const [users, setUsers] = useState<string[]>([]);
+
+  const sendMessage = async () => {
+    if (inputMessage === "") return;
+    const message = {
+      id: messages.length,
+      user: username as string,
+      content: inputMessage as string,
+    };
+
+    // push message to api/[pusher]
+    await fetch("/api/pusher/message", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    }).catch((err) =>
+      console.log("Message failed sending with the following error: \n", err)
+    );
+
+    setInputMessage("");
+  };
+
+  // send message on enter key pressed
+  const handleEnterKey = async (e: any) => {
+    if (e.key === "Enter") {
+      await sendMessage();
+    }
+  };
 
   useEffect(() => {
     var pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_API_KEY as string, {
@@ -68,72 +98,50 @@ const Chat = () => {
     setInputMessage(event.target.value);
   };
 
-  const sendMessage = async () => {
-    if (inputMessage === "") return;
-    const message = {
-      id: messages.length,
-      user: username as string,
-      content: inputMessage as string,
-    };
-
-    // push message to api/[pusher]
-    await fetch("/api/pusher/message", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(message),
-    }).catch((err) =>
-      console.log("Message failed sending with the following error: \n", err)
-    );
-
-    setInputMessage("");
-  };
-
   return (
     <>
+      <video
+        autoPlay
+        muted
+        loop
+        className="fixed bottom-0 bg-black opacity-[0.1] w-min-[100%] h-min-[100%] scale-[280%]  z-[1]"
+        src="/bg.mp4"
+      />
       <div className="bg-gray-900 v-screen h-screen text-white flex">
-        <div className="chat-sidebar">
-          <div className="flex w-full h-auto my-2">
+        <div className="chat-sidebar shadow-md shadow-teal-500 border-r-[1px] border-r-teal-900 z-[2]">
+          <div className="bg-neutral-800 flex justify-left px-3 h-auto py-2">
             <Link href="/">
               <img
-                className="h-[40px] ml-2 my-2"
-                src="/favicon.ico"
+                className="h-[40px] my-2 invert"
+                src="/llama.png"
                 alt="logo"
               />
             </Link>
-            <div className="p-0 m-0 ml-3">
-              <p className="p-0 m-0">Hello,</p>
-              <h1 className="p-0 ml-2 m-0">{username}</h1>
+            <div className="p-0 m-0 ml-2 pt-[2px]">
+              <p className="p-0 m-0 text-xl">llama chat</p>
+              <h1 className="p-0 m-0 text-sm">U | {username}</h1>
             </div>
           </div>
-          <h1 className="pl-3 pt-2 mb-2 border-t-[1px]">Users:</h1>
-          {
-            users.map((user, i) => (
-              <div key={i} className="chat-sidebar-user">
-                {user}
-              </div>
-            ))
-
-            /* <!-- {#if !$q.loading}
-			{#each users as user}
-				<div className="chat-sidebar-user">{user}</div>
-			{/each}
-		{/if} --> */
-          }
+          <h1 className="pl-3 pt-2 mb-2">Users:</h1>
+          {users.map((user, i) => (
+            <div key={i} className="chat-sidebar-user">
+              {user}
+            </div>
+          ))}
         </div>
-        <div className="chat-message-input flex justify-start">
+        <div className="chat-message-input flex justify-start z-[3]">
           <input
             onChange={inputMessageChanged}
             value={inputMessage}
             placeholder="Message..."
-            className="mx-auto pl-5 py-[5px] w-[85vw] bg-transparent border-[1px] rounded-xl"
+            onKeyDown={handleEnterKey}
+            className="mx-auto ml-5 pl-5 placeholder-teal-600 border-neutral-500 py-[5px] w-[100vw] bg-transparent border-[1px] rounded-xl outline-none"
           />
           <button
             onClick={sendMessage}
-            className="mr-3 ml-3 border-white default-button"
+            className="mr-3 ml-3 bg-neutral-600 border-neutral-500 default-button"
           >
-            Send
+            <AiOutlineDoubleRight className="text-teal-300" />
           </button>
         </div>
         <div className="flex flex-col w-full h-auto overflow-auto mb-[50px] pb-[20px]">
