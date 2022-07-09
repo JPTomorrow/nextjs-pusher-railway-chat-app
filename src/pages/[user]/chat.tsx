@@ -106,15 +106,8 @@ const Chat = () => {
 
   return (
     <>
-      <video
-        autoPlay
-        muted
-        loop
-        className="fixed bottom-0 bg-black opacity-[0.1] w-min-[100%] h-min-[100%] scale-[280%]  z-[1]"
-        src="/bg.mp4"
-      />
       <div className="bg-gray-900 v-screen h-screen text-white flex">
-        <div className="chat-sidebar shadow-md shadow-teal-500 border-r-[1px] border-r-teal-900 z-[2]">
+        <div className="chat-sidebar shadow-md shadow-teal-500 border-r-[1px] border-r-teal-900 z-[5]">
           <div className="bg-neutral-800 flex justify-left px-3 h-auto py-2">
             <Link href="/">
               <img
@@ -135,7 +128,7 @@ const Chat = () => {
             </div>
           ))}
         </div>
-        <div className="chat-message-input flex justify-start z-[3]">
+        <div className="chat-message-input flex justify-start z-[10]">
           <input
             onChange={inputMessageChanged}
             value={inputMessage}
@@ -150,7 +143,11 @@ const Chat = () => {
             <AiOutlineDoubleRight className="text-teal-300" />
           </button>
         </div>
-        <div className="flex flex-col w-full h-auto overflow-auto mb-[50px] pb-[20px]">
+        <div
+          className="fixed bg-synth bg-cover w-screen h-screen top-0 left-0 z-[0]"
+          style={{ opacity: 0.3 }}
+        />
+        <div className="bg-transparent flex flex-col w-full h-auto overflow-auto mb-[50px] pb-[20px] z-[1]">
           {messages.map((msg, i) => {
             if (msg.user === username) {
               return (
